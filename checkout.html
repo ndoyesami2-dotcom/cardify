@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — Cardify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./update-mode.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="checkout-body">
+    <div class="bg-motifs" aria-hidden="true">
+      <span class="motif motif-1">APPLE</span>
+      <span class="motif motif-2">PS</span>
+      <span class="motif motif-3">XBOX</span>
+    </div>
+
+    <header class="checkout-header">
+      <a href="./home.html" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo brand-logo--header" src="./CARDIFY__1_-removebg-preview.png" alt="" decoding="async" />
+      </a>
+      <div class="checkout-header-body">
+        <a class="link-back" id="checkoutBack" href="./home.html">← Back to shop</a>
+        <h1 class="checkout-title" id="checkoutTitle">Payment</h1>
+        <p class="checkout-sub" id="checkoutSummary"></p>
+        <ul class="checkout-lines" id="checkoutLines" hidden></ul>
+      </div>
+    </header>
+
+    <main class="checkout-main">
+      <p class="checkout-section-label" id="checkoutChoose">Choose a payment method</p>
+      <div class="pay-options">
+        <button type="button" class="pay-card" data-method="card">
+          <span class="pay-row">
+            <span class="pay-logos">
+              <img
+                class="pay-logo pay-logo--stripe"
+                src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg"
+                alt="Stripe"
+              />
+              <img
+                class="pay-logo pay-logo--mc"
+                src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                alt=""
+              />
+            </span>
+            <span class="pay-label" id="payLabelCard">Card (Stripe)</span>
+          </span>
+          <span class="pay-hint" id="payHintCard">Stripe — Visa, Mastercard, and major cards</span>
+        </button>
+
+        <button type="button" class="pay-card pay-card--wave" data-method="wave">
+          <span class="pay-row">
+            <img
+              class="pay-wave-icon"
+              src="./wave.png"
+              alt=""
+              width="40"
+              height="40"
+              decoding="async"
+            />
+            <span class="pay-label" id="payLabelWave">Wave</span>
+          </span>
+          <span class="pay-hint" id="payHintWave">Pay with your Wave wallet</span>
+        </button>
+
+        <button type="button" class="pay-card pay-card--inactive pay-card--om" data-method="orange" disabled>
+          <span class="pay-row">
+            <span class="pay-om-icon" aria-hidden="true">OM</span>
+            <span class="pay-label" id="payLabelOm">Orange Money</span>
+          </span>
+          <span class="pay-hint pay-hint--inactive" id="payHintOm">Currently inactive</span>
+        </button>
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo" aria-labelledby="securePayHeading">
+      <div class="site-footer-inner">
+        <h2 class="site-footer-heading" id="securePayHeading">Secure payment</h2>
+        <div class="site-footer-logos">
+          <img
+            class="site-footer-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+            alt="Mastercard"
+            height="28"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo"
+            src="./visa.svg"
+            alt="Visa"
+            height="24"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo site-footer-logo--wave"
+            src="./wave.png"
+            alt="Wave"
+            height="30"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo site-footer-logo--om"
+            src="./orange%20money.png"
+            alt="Orange Money"
+            height="28"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo site-footer-logo--partner"
+            src="./image(1).png"
+            alt="Partner"
+            height="32"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <nav class="site-footer-social" aria-label="Social">
+          <a class="site-footer-social-link" href="https://www.instagram.com/giftcardshopsn/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Cardify on Instagram, opens in new tab"><span class="site-footer-social-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></span></a>
+          <a class="site-footer-social-link" href="https://www.tiktok.com/@cardifysngiftcard" target="_blank" rel="noopener noreferrer" title="TikTok" aria-label="Cardify on TikTok, opens in new tab"><span class="site-footer-social-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></span></a>
+        </nav>
+        <p class="site-footer-terms">
+          <a class="site-footer-terms-link" href="./terms.html" id="siteFooterTermsLink">Terms and conditions</a>
+          <span class="site-footer-terms-sep" aria-hidden="true">·</span>
+          <a class="site-footer-terms-link" href="./terms.html" id="siteFooterTosLink">Terms of Service</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="./firebase-config-public.js"></script>
+    <script type="module" src="./update-mode.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="./cart-storage.js"></script>
+    <script src="./checkout-page.js"></script>
+    <script src="./footer-terms-href.js" defer></script>
+  </body>
+</html>

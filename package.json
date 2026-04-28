@@ -1,0 +1,23 @@
+{
+  "name": "cardify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Cardify storefront (local dev server)",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "build": "node -e \"console.log('Cardify static app: no build step required')\"",
+    "start": "node server.js",
+    "serve": "node server.js",
+    "test:firestore-payments": "node scripts/firestore-payment-ping.mjs"
+  },
+  "dependencies": {
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity post — Cardify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./update-mode.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="activity-post-body">
+    <header class="activity-feed-header">
+      <a href="./home.html#shopActivitySection" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo brand-logo--header" src="./CARDIFY__1_-removebg-preview.png" alt="" decoding="async" />
+      </a>
+      <div class="activity-feed-header-body">
+        <a class="link-back" href="./home.html#shopActivitySection" id="activityPostBack">← Back to activity feed</a>
+        <h1 class="activity-feed-title" id="activityPostHeader">Activity post</h1>
+      </div>
+    </header>
+
+    <main class="activity-post-main" id="activityPostRoot" aria-live="polite">
+      <p class="admin-orders-hint">Loading…</p>
+    </main>
+
+    <script src="./firebase-config-public.js"></script>
+    <script type="module" src="./update-mode.js"></script>
+    <script type="module" src="./activity-post.js"></script>
+  </body>
+</html>

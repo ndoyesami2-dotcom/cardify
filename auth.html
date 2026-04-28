@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — Cardify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./update-mode.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="auth-page">
+    <header class="auth-page-topbar">
+      <a href="./index.html" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo" src="./CARDIFY__1_-removebg-preview.png" alt="Cardify" decoding="async" />
+      </a>
+      <div class="language-switcher" id="languageSwitcher">
+        <button type="button" class="lang-circle-btn" id="langToggle" aria-label="Choose language">
+          <img class="lang-toggle-flag" src="./USA.png" alt="" width="22" height="22" decoding="async" />
+        </button>
+        <div class="lang-menu hidden" id="langMenu">
+          <button type="button" class="lang-option" data-lang="en">
+            <img class="lang-option-flag" src="./USA.png" alt="" width="22" height="22" decoding="async" />
+            <span id="langMenuEn">English</span>
+          </button>
+          <button type="button" class="lang-option" data-lang="fr">
+            <img class="lang-option-flag" src="./france.png" alt="" width="22" height="22" decoding="async" />
+            <span id="langMenuFr">French</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-page-main">
+      <div class="auth-page-content" id="authModalBackdrop">
+        <section class="auth-side-panel" aria-hidden="true">
+          <p class="auth-side-kicker">Cardify</p>
+          <h1 id="authSideTitle">Buy cards faster.</h1>
+          <p id="authSideText">Sign in or create your account with a clean purple and black Cardify experience.</p>
+        </section>
+        <section class="auth-form-panel" aria-labelledby="signInTitle">
+          <button type="button" class="close-modal" id="closeModalBtn" aria-label="Close">×</button>
+          <div class="auth-tabs">
+            <button type="button" class="auth-tab active" id="tabSignIn">Sign In</button>
+            <button type="button" class="auth-tab" id="tabCreate">Create Account</button>
+          </div>
+          <form class="auth-form auth-flow-card" id="signInForm">
+            <p class="auth-kicker" id="signInKicker">Welcome back</p>
+            <h2 id="signInTitle">Sign In</h2>
+            <label for="signInEmail" id="labelSignInEmail">Email</label>
+            <input type="email" id="signInEmail" autocomplete="email" required />
+            <label for="signInPassword" id="labelSignInPassword">Password</label>
+            <input type="password" id="signInPassword" autocomplete="current-password" required />
+            <button type="submit" class="primary-btn" id="signInSubmitBtn">Sign In</button>
+            <p class="form-message" id="signInMessage"></p>
+          </form>
+          <form class="auth-form auth-flow-card hidden" id="createForm">
+            <section class="create-step" data-create-step="0">
+              <p class="auth-kicker" id="createKicker">Create account</p>
+              <h2 id="createTitle">How should we call you?</h2>
+              <label for="username" id="labelUsername">Username</label>
+              <input type="text" id="username" autocomplete="username" required />
+              <label for="fullName" id="labelFullName">Full Name</label>
+              <input type="text" id="fullName" autocomplete="name" required />
+              <button type="button" class="primary-btn create-next-btn" data-create-next="1">Next</button>
+            </section>
+            <section class="create-step hidden" data-create-step="1">
+              <p class="auth-kicker">Hello <span id="createHelloName">there</span></p>
+              <h2 id="createContactTitle">Can we please get your contact?</h2>
+              <label for="createEmail" id="labelCreateEmail">Email</label>
+              <input type="email" id="createEmail" autocomplete="email" required />
+              <label for="createPhone" id="labelCreatePhone">Senegal mobile (9 digits)</label>
+              <input type="tel" id="createPhone" inputmode="numeric" autocomplete="tel-national" required />
+              <button type="button" class="primary-btn create-next-btn" data-create-next="2">Next</button>
+            </section>
+            <section class="create-step hidden" data-create-step="2">
+              <p class="auth-kicker" id="createPasswordKicker">Secure your account</p>
+              <h2 id="createPasswordTitle">Create your password</h2>
+              <label for="createPassword" id="labelCreatePassword">Password</label>
+              <input type="password" id="createPassword" autocomplete="new-password" required />
+              <label for="confirmPassword" id="labelConfirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" autocomplete="new-password" required />
+              <button type="button" class="primary-btn create-next-btn" data-create-next="3">Next</button>
+            </section>
+            <section class="create-step auth-terms-step hidden" data-create-step="3">
+              <p class="auth-kicker" id="createTermsKicker">Before you can start</p>
+              <h2 id="createTermsTitle">Please accept our terms and conditions</h2>
+              <div class="auth-checkbox-wrap auth-checkbox-wrap--large">
+                <input type="checkbox" id="acceptTerms" name="acceptTerms" value="1" required />
+                <label for="acceptTerms" class="auth-checkbox-label">
+                  <span id="acceptTermsPart1"></span><a
+                    class="auth-inline-link"
+                    href="./terms.html?lang=en"
+                    id="acceptTermsLink"
+                    onclick="event.stopPropagation()"
+                  ></a>
+                </label>
+              </div>
+              <button type="submit" class="primary-btn" id="createSubmitBtn">Create</button>
+            </section>
+            <p class="form-message" id="createMessage"></p>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <script src="./firebase-config-public.js"></script>
+    <script type="module" src="./update-mode.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

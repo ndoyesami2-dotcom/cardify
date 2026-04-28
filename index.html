@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cardify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./update-mode.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="index-page">
+    <div class="black-sand-bg" id="vantaTopologyBg" aria-hidden="true"></div>
+    <header class="topbar topbar--index-float">
+      <a href="./index.html" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo" src="./CARDIFY__1_-removebg-preview.png" alt="Cardify" decoding="async" />
+      </a>
+      <div class="index-search-wrap" role="search">
+        <label class="visually-hidden" for="indexCardSearch" id="indexSearchLabel">Search cards</label>
+        <input
+          type="search"
+          id="indexCardSearch"
+          class="index-search-input glassy-field"
+          placeholder="Check out our cards"
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="indexSearchLabel"
+        />
+        <div class="index-search-results hidden" id="indexSearchResults" aria-live="polite"></div>
+      </div>
+      <div class="topbar-actions">
+        <div class="overflow-menu" id="overflowMenuRoot">
+          <button
+            type="button"
+            class="icon-btn overflow-menu-trigger overflow-menu-trigger--top"
+            id="overflowMenuBtn"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="overflowMenuPanel"
+            aria-label="More options"
+          >
+            ⋮
+          </button>
+          <div class="overflow-menu-panel hidden" id="overflowMenuPanel" role="menu">
+            <button type="button" class="overflow-menu-item" id="themeToggleBtn" role="menuitem">Dark mode</button>
+          </div>
+        </div>
+        <div class="language-switcher" id="languageSwitcher">
+          <button type="button" class="lang-circle-btn" id="langToggle" aria-label="Choose language">
+            <img class="lang-toggle-flag" src="./USA.png" alt="" width="22" height="22" decoding="async" />
+          </button>
+          <div class="lang-menu hidden" id="langMenu">
+            <button type="button" class="lang-option" data-lang="en">
+              <img class="lang-option-flag" src="./USA.png" alt="" width="22" height="22" decoding="async" />
+              <span id="langMenuEn">English</span>
+            </button>
+            <button type="button" class="lang-option" data-lang="fr">
+              <img class="lang-option-flag" src="./france.png" alt="" width="22" height="22" decoding="async" />
+              <span id="langMenuFr">French</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="hero">
+      <div class="hero-left">
+        <div class="hero-headline-block">
+          <h1 class="hero-title hero-title--stacked" id="heroTitle">
+            <span class="hero-shuffle-line">
+              <span class="shuffle-wrap" aria-hidden="true">
+                <span class="shuffle-track">
+                  <span class="shuffle-word" id="wordBuy">Buy</span>
+                  <span class="shuffle-word" id="wordReceive">Receive</span>
+                  <span class="shuffle-word" id="wordSpend">Spend</span>
+                  <span class="shuffle-word" id="wordBuyLoop">Buy</span>
+                </span>
+              </span>
+            </span>
+            <span class="hero-fixed" id="heroFixed">with Cardify</span>
+          </h1>
+          <div class="hero-copy-stack">
+            <p class="hero-tagline" id="heroTagline">and play like a real gamer</p>
+          </div>
+        </div>
+        <button type="button" class="sign-in-main glow" id="openAuthBtn">Sign In</button>
+      </div>
+      <aside class="index-value-card" aria-label="Cardify listing savings">
+        <div class="index-listing-count">
+          <strong id="indexListingCount">0</strong>
+          <span>listings on Cardify</span>
+        </div>
+        <p class="index-value-kicker">10% cheaper then the other websites selling cards</p>
+        <div class="index-progress-track" aria-hidden="true">
+          <span class="index-progress-fill"></span>
+        </div>
+      </aside>
+    </main>
+
+    <section class="index-brands-section" aria-labelledby="brandsMarqueeHeading">
+      <h2 class="index-brands-heading" id="brandsMarqueeHeading">Gift cards we sell</h2>
+      <div class="index-brands-marquee">
+        <div class="index-brands-track">
+          <!-- Logos load from Wikimedia Commons so they work even without local PNG files; swap src to ./yourfile.png anytime. -->
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+            alt="Apple"
+            width="120"
+            height="72"
+            decoding="async"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg"
+            alt="PlayStation"
+            width="160"
+            height="72"
+            decoding="async"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+            alt="Xbox"
+            width="160"
+            height="72"
+            decoding="async"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg"
+            alt="Nintendo"
+            width="140"
+            height="72"
+            decoding="async"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg"
+            alt="Roblox"
+            width="72"
+            height="72"
+            decoding="async"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg"
+            alt="Epic Games"
+            width="180"
+            height="72"
+            decoding="async"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+            alt=""
+            width="120"
+            height="72"
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg"
+            alt=""
+            width="160"
+            height="72"
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+            alt=""
+            width="160"
+            height="72"
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg"
+            alt=""
+            width="140"
+            height="72"
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg"
+            alt=""
+            width="72"
+            height="72"
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            class="index-brand-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg"
+            alt=""
+            width="180"
+            height="72"
+            decoding="async"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+    </section>
+
+    <div class="modal-backdrop hidden" id="authModalBackdrop">
+      <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="signInTitle">
+        <button type="button" class="close-modal" id="closeModalBtn" aria-label="Close">×</button>
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" id="tabSignIn">Sign In</button>
+          <button type="button" class="auth-tab" id="tabCreate">Create Account</button>
+        </div>
+        <form class="auth-form auth-flow-card" id="signInForm">
+          <p class="auth-kicker" id="signInKicker">Welcome back</p>
+          <h2 id="signInTitle">Sign In</h2>
+          <label for="signInEmail" id="labelSignInEmail">Email</label>
+          <input type="email" id="signInEmail" autocomplete="email" required />
+          <label for="signInPassword" id="labelSignInPassword">Password</label>
+          <input type="password" id="signInPassword" autocomplete="current-password" required />
+          <button type="submit" class="primary-btn" id="signInSubmitBtn">Sign In</button>
+          <p class="form-message" id="signInMessage"></p>
+        </form>
+        <form class="auth-form auth-flow-card hidden" id="createForm">
+          <section class="create-step" data-create-step="0">
+            <p class="auth-kicker" id="createKicker">Create account</p>
+            <h2 id="createTitle">How should we call you?</h2>
+            <label for="username" id="labelUsername">Username</label>
+            <input type="text" id="username" autocomplete="username" required />
+            <label for="fullName" id="labelFullName">Full Name</label>
+            <input type="text" id="fullName" autocomplete="name" required />
+            <button type="button" class="primary-btn create-next-btn" data-create-next="1">Next</button>
+          </section>
+          <section class="create-step hidden" data-create-step="1">
+            <p class="auth-kicker">Hello <span id="createHelloName">there</span></p>
+            <h2 id="createContactTitle">Can we please get your contact?</h2>
+            <label for="createEmail" id="labelCreateEmail">Email</label>
+            <input type="email" id="createEmail" autocomplete="email" required />
+            <label for="createPhone" id="labelCreatePhone">Senegal mobile (9 digits)</label>
+            <input type="tel" id="createPhone" inputmode="numeric" autocomplete="tel-national" required />
+            <button type="button" class="primary-btn create-next-btn" data-create-next="2">Next</button>
+          </section>
+          <section class="create-step hidden" data-create-step="2">
+            <p class="auth-kicker" id="createPasswordKicker">Secure your account</p>
+            <h2 id="createPasswordTitle">Create your password</h2>
+            <label for="createPassword" id="labelCreatePassword">Password</label>
+            <input type="password" id="createPassword" autocomplete="new-password" required />
+            <label for="confirmPassword" id="labelConfirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" autocomplete="new-password" required />
+            <button type="button" class="primary-btn create-next-btn" data-create-next="3">Next</button>
+          </section>
+          <section class="create-step auth-terms-step hidden" data-create-step="3">
+            <p class="auth-kicker" id="createTermsKicker">Before you can start</p>
+            <h2 id="createTermsTitle">Please accept our terms and conditions</h2>
+            <div class="auth-checkbox-wrap auth-checkbox-wrap--large">
+              <input type="checkbox" id="acceptTerms" name="acceptTerms" value="1" required />
+              <label for="acceptTerms" class="auth-checkbox-label">
+                <span id="acceptTermsPart1"></span><a
+                  class="auth-inline-link"
+                  href="./terms.html?lang=en"
+                  id="acceptTermsLink"
+                  onclick="event.stopPropagation()"
+                ></a>
+              </label>
+            </div>
+            <button type="submit" class="primary-btn" id="createSubmitBtn">Create</button>
+          </section>
+          <p class="form-message" id="createMessage"></p>
+        </form>
+      </div>
+    </div>
+
+    <footer class="site-footer" role="contentinfo" aria-labelledby="securePayHeading">
+      <div class="site-footer-inner">
+        <h2 class="site-footer-heading" id="securePayHeading">Secure payment</h2>
+        <div class="site-footer-logos">
+          <img
+            class="site-footer-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+            alt="Mastercard"
+            height="28"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo"
+            src="./visa.svg"
+            alt="Visa"
+            height="24"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo site-footer-logo--wave"
+            src="./wave.png"
+            alt="Wave"
+            height="30"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo site-footer-logo--om"
+            src="./orange%20money.png"
+            alt="Orange Money"
+            height="28"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="site-footer-logo site-footer-logo--partner"
+            src="./image(1).png"
+            alt="Partner"
+            height="32"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <nav class="site-footer-social" aria-label="Social">
+          <a class="site-footer-social-link" href="https://www.instagram.com/giftcardshopsn/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Cardify on Instagram, opens in new tab"><span class="site-footer-social-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></span></a>
+          <a class="site-footer-social-link" href="https://www.tiktok.com/@cardifysngiftcard" target="_blank" rel="noopener noreferrer" title="TikTok" aria-label="Cardify on TikTok, opens in new tab"><span class="site-footer-social-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></span></a>
+        </nav>
+        <p class="site-footer-terms">
+          <a class="site-footer-terms-link" href="./terms.html" id="siteFooterTermsLink">Terms and conditions</a>
+          <span class="site-footer-terms-sep" aria-hidden="true">·</span>
+          <a class="site-footer-terms-link" href="./terms.html" id="siteFooterTosLink">Terms of Service</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="./firebase-config-public.js"></script>
+    <script src="./listings-data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js" crossorigin="anonymous"></script>
+    <script>
+      (function () {
+        var el = document.getElementById("vantaTopologyBg");
+        if (!el || !window.VANTA || !window.p5) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        var effect = VANTA.TOPOLOGY({
+          el: el,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          color: 0xecede9,
+          backgroundColor: 0x0c0c0c
+        });
+        if (effect && effect.resize) {
+          window.addEventListener("resize", function () {
+            try {
+              effect.resize();
+            } catch (e) {}
+          });
+        }
+      })();
+    </script>
+    <script type="module" src="./update-mode.js"></script>
+    <script type="module" src="./app.js"></script>
+    <script src="./footer-terms-href.js" defer></script>
+  </body>
+</html>

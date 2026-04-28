@@ -1,0 +1,373 @@
+rules_version = '2';
+
+// Cardify — deploy: firebase deploy --only firestore:rules
+// Admin email must match Firebase Authentication (see isCardifyAdmin).
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    /* Add every admin sign-in here (lowercase) — must match Firebase Auth. Deploy after edits: firebase deploy --only firestore:rules */
+    function isCardifyAdmin() {
+      return signedIn()
+        && request.auth.token is map
+        && request.auth.token.keys().hasAll(['email'])
+        && request.auth.token.email is string
+        && request.auth.token.email.size() > 0
+        && request.auth.token.email.lower() in [
+          "ndoyesami2@gmail.com"
+        ];
+    }
+
+    function userDocExists() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userSenegalPhone() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.senegalPhone;
+    }
+
+    function isPendingFulfillment() {
+      return !resource.data.keys().hasAny(['fulfillmentStatus'])
+        || resource.data.get('fulfillmentStatus', 'pending') == 'pending';
+    }
+
+    function sameCoreOrder() {
+      return request.resource.data.items == resource.data.items
+        && request.resource.data.phone == resource.data.phone
+        && request.resource.data.method == resource.data.method
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.get('userId', null) == resource.data.get('userId', null);
+    }
+
+    function sameUserCoreForAdmin() {
+      return request.resource.data.email == resource.data.email
+        && request.resource.data.username == resource.data.username
+        && request.resource.data.fullName == resource.data.fullName
+        && request.resource.data.language == resource.data.language
+        && request.resource.data.senegalPhone == resource.data.senegalPhone
+        && request.resource.data.termsAccepted == resource.data.termsAccepted
+        && request.resource.data.get('createdAt', null) == resource.data.get('createdAt', null)
+        && request.resource.data.get('termsAcceptedAt', null) == resource.data.get('termsAcceptedAt', null);
+    }
+
+    /* Read/update own order: by userId (signed-in checkout) OR by phone (guest, profile phone must match). */
+    function isOrderOwner() {
+      return signedIn()
+        && request.auth != null
+        && (
+          (resource.data.keys().hasAny(['userId'])
+            && request.auth.uid == resource.data.get('userId', ''))
+          || (!resource.data.keys().hasAny(['userId'])
+            && resource.data.keys().hasAll(['phone'])
+            && userDocExists()
+            && userSenegalPhone() is string
+            && userSenegalPhone() == resource.data.phone)
+        );
+    }
+
+    function supportTicketDoc(tid) {
+      return get(/databases/$(database)/documents/supportTickets/$(tid));
+    }
+
+    function supportChatActive(tid) {
+      return supportTicketDoc(tid).data.status == 'active';
+    }
+
+    function isSupportTicketOwner(tid) {
+      return signedIn() && supportTicketDoc(tid).data.userId == request.auth.uid;
+    }
+
+    function sameCoreSupportOnAccept() {
+      return request.resource.data.userId == resource.data.userId
+        && request.resource.data.message == resource.data.message
+        && request.resource.data.get('createdAt', null) == resource.data.get('createdAt', null)
+        && request.resource.data.get('userEmail', '') == resource.data.get('userEmail', '')
+        && request.resource.data.get('username', '') == resource.data.get('username', '');
+    }
+
+    /* —— users —— */
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isCardifyAdmin();
+      allow create: if isOwner(userId)
+        && request.resource.data.keys().hasAll(['email', 'username', 'fullName', 'language', 'senegalPhone'])
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 320
+        && request.resource.data.username is string
+        && request.resource.data.username.size() <= 64
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() <= 200
+        && request.resource.data.language is string
+        && request.resource.data.language.size() <= 10
+        && request.resource.data.senegalPhone is string
+        && request.resource.data.senegalPhone.matches('^[37][0-9]{8}$')
+        && (!request.resource.data.keys().hasAny(['banned']) || request.resource.data.banned == false);
+      allow update: if isOwner(userId)
+        || (isCardifyAdmin()
+          && userId != request.auth.uid
+          && sameUserCoreForAdmin()
+          && request.resource.data.get('banned', false) is bool);
+      allow delete: if false;
+    }
+
+    match /alerts/{alertId} {
+      allow read: if isCardifyAdmin()
+        || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isCardifyAdmin()
+        && request.resource.data.keys().hasAll(['userId', 'message', 'read', 'createdAt'])
+        && request.resource.data.userId is string
+        && request.resource.data.userId.size() < 200
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 5000
+        && request.resource.data.read == false
+        && request.auth.uid != request.resource.data.userId
+        && request.resource.data.keys().size() <= 12;
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.message == resource.data.message
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.read == true;
+      allow delete: if false;
+    }
+
+    match /payments/{id} {
+      allow read: if false;
+      allow create: if request.resource.data.method is string
+        && request.resource.data.method.size() > 0
+        && request.resource.data.method.size() < 80
+        && request.resource.data.keys().size() <= 40;
+      allow update, delete: if false;
+    }
+
+    match /checkoutTests/{id} {
+      allow read: if false;
+      allow create: if request.resource.data.keys().hasAll(['scenario', 'paid'])
+        && request.resource.data.scenario is string
+        && request.resource.data.scenario.size() < 120
+        && request.resource.data.paid is bool
+        && request.resource.data.keys().size() <= 20;
+      allow update, delete: if false;
+    }
+
+    match /termsAndConditions/{id} {
+      allow read: if false;
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.acceptedTerms == true
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() > 0
+        && request.resource.data.fullName.size() <= 200
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 0
+        && request.resource.data.email.size() <= 320
+        && request.resource.data.language is string
+        && request.resource.data.language.size() <= 10
+        && request.resource.data.keys().size() <= 12;
+      allow update, delete: if false;
+    }
+
+    match /orders/{id} {
+      allow read: if isCardifyAdmin() || isOrderOwner();
+      allow create: if request.resource.data.keys().hasAll(['phone', 'items', 'method', 'status'])
+        && request.resource.data.phone is string
+        && request.resource.data.phone.matches('^[37][0-9]{8}$')
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 50
+        && request.resource.data.method is string
+        && request.resource.data.method.size() > 0
+        && request.resource.data.method.size() < 80
+        && request.resource.data.status is string
+        && request.resource.data.status.size() > 0
+        && request.resource.data.status.size() < 80
+        && (!request.resource.data.keys().hasAny(['fulfillmentStatus']) || request.resource.data.fulfillmentStatus == 'pending')
+        && (!request.resource.data.keys().hasAny(['userId']) || (signedIn() && request.auth.uid == request.resource.data.userId && request.resource.data.userId is string && request.resource.data.userId.size() < 130))
+        && (!request.resource.data.keys().hasAny(['fullName']) || (request.resource.data.fullName is string && request.resource.data.fullName.size() <= 200))
+        && request.resource.data.keys().size() <= 40;
+      allow update: if (isCardifyAdmin() && isPendingFulfillment() && sameCoreOrder()
+        && request.resource.data.fulfillmentStatus == 'confirmed')
+        || (isOrderOwner() && isPendingFulfillment() && sameCoreOrder()
+        && request.resource.data.fulfillmentStatus == 'cancelled');
+      allow delete: if false;
+    }
+
+    /* Support: user creates; admin can accept (activate chat) */
+    match /supportTickets/{ticketId} {
+      allow read: if isCardifyAdmin()
+        || (signedIn() && resource.data.userId == request.auth.uid);
+
+      allow create: if signedIn()
+        && request.auth.uid == request.resource.data.userId
+        && request.resource.data.keys().hasAll(['userId', 'message', 'status', 'createdAt'])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.userId is string
+        && request.resource.data.userId.size() < 200
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 5000
+        && request.resource.data.status in ['open', 'queued']
+        && (!request.resource.data.keys().hasAny(['wantsAgent']) || request.resource.data.wantsAgent is bool)
+        && (!request.resource.data.keys().hasAny(['userEmail']) || (request.resource.data.userEmail is string && request.resource.data.userEmail.size() <= 320))
+        && (!request.resource.data.keys().hasAny(['username']) || (request.resource.data.username is string && request.resource.data.username.size() <= 64))
+        && (!request.resource.data.keys().hasAny(['source']) || (request.resource.data.source is string && request.resource.data.source.size() <= 40))
+        && request.resource.data.keys().size() <= 12;
+
+      /* Admin only: accept a queued/open ticket to start live chat. */
+      allow update: if isCardifyAdmin()
+        && sameCoreSupportOnAccept()
+        && (resource.data.get('status', 'open') in ['open', 'queued'] || !resource.data.keys().hasAny(['status']))
+        && request.resource.data.status == 'active'
+        && request.resource.data.acceptedBy is string
+        && request.resource.data.acceptedBy == request.auth.uid;
+
+      allow delete: if false;
+    }
+
+    /* Chat under an accepted ticket (status must be active) */
+    match /supportTickets/{ticketId}/chatMessages/{msgId} {
+      allow read: if isCardifyAdmin() || (signedIn() && isSupportTicketOwner(ticketId));
+
+      allow create: if signedIn()
+        && supportChatActive(ticketId)
+        && request.resource.data.keys().hasAll(['text', 'from', 'senderId', 'createdAt'])
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000
+        && request.resource.data.from in ['user', 'admin']
+        && request.resource.data.senderId is string
+        && request.resource.data.senderId == request.auth.uid
+        && request.resource.data.keys().size() <= 8
+        && (
+          (request.resource.data.from == 'user'
+            && isSupportTicketOwner(ticketId))
+          || (request.resource.data.from == 'admin' && isCardifyAdmin()
+            && supportTicketDoc(ticketId).data.get('userId', '') != request.auth.uid
+            && supportTicketDoc(ticketId).data.get('acceptedBy', '') is string
+            && supportTicketDoc(ticketId).data.get('acceptedBy', '') == request.auth.uid
+          )
+        );
+      allow update, delete: if false;
+    }
+
+    /* —— Shop activity feed (listings) — public read, click +1, admin only create/delete */
+    function activityDataSameExceptClicks() {
+      return request.resource.data.get('title', '') is string
+        && resource.data.get('title', '') is string
+        && request.resource.data.title == resource.data.title
+        && request.resource.data.description == resource.data.description
+        && request.resource.data.imageUrl == resource.data.imageUrl
+        && request.resource.data.imageStoragePath == resource.data.imageStoragePath
+        && request.resource.data.get('mainMime', '') == resource.data.get('mainMime', '')
+        && request.resource.data.get('mainFileName', '') == resource.data.get('mainFileName', '')
+        && request.resource.data.get('descriptionAttachments', []) is list
+        && resource.data.get('descriptionAttachments', []) is list
+        && request.resource.data.descriptionAttachments == resource.data.descriptionAttachments
+        && request.resource.data.get('createdAt', request.time) == resource.data.get('createdAt', request.time);
+    }
+
+    function activityClickCountBump() {
+      let oldC = resource.data.get('clickCount', 0);
+      return request.resource.data.clickCount is int
+        && oldC is int
+        && request.resource.data.clickCount == oldC + 1
+        && activityDataSameExceptClicks();
+    }
+
+    function activityDescriptionAttachmentsUnchanged() {
+      return (!request.resource.data.keys().hasAny(['descriptionAttachments'])
+          && !resource.data.keys().hasAny(['descriptionAttachments']))
+        || (request.resource.data.get('descriptionAttachments', []) is list
+          && resource.data.get('descriptionAttachments', []) is list
+          && request.resource.data.get('descriptionAttachments', []) == resource.data.get('descriptionAttachments', []));
+    }
+
+    function activityLikeCountChange() {
+      /* Like/unlike: only likeCount may change. Avoid strict "oldL is int" and [] vs missing mismatches. */
+      let before = resource.data.get('likeCount', 0);
+      let after = request.resource.data.get('likeCount', -1);
+      return after is int
+        && after >= 0
+        && (after == before + 1 || after == before - 1)
+        && request.resource.data.title is string
+        && resource.data.title is string
+        && request.resource.data.title == resource.data.title
+        && request.resource.data.description is string
+        && resource.data.description is string
+        && request.resource.data.description == resource.data.description
+        && request.resource.data.imageUrl is string
+        && resource.data.imageUrl is string
+        && request.resource.data.imageUrl == resource.data.imageUrl
+        && request.resource.data.imageStoragePath is string
+        && resource.data.imageStoragePath is string
+        && request.resource.data.imageStoragePath == resource.data.imageStoragePath
+        && request.resource.data.get('mainMime', '') == resource.data.get('mainMime', '')
+        && request.resource.data.get('mainFileName', '') == resource.data.get('mainFileName', '')
+        && request.resource.data.get('clickCount', 0) == resource.data.get('clickCount', 0)
+        && request.resource.data.get('createdAt', null) == resource.data.get('createdAt', null)
+        && activityDescriptionAttachmentsUnchanged();
+    }
+
+    /* Public read: site flags (e.g. maintenance). Admin-only write. */
+    match /config/{docId} {
+      allow read: if true;
+      /* Merged setDoc can leave extra fields on the doc; do not cap key count. */
+      allow create, update: if isCardifyAdmin()
+        && request.resource.data.updateMode is bool;
+      allow delete: if false;
+    }
+
+    /* Comments on an activity post: public read, open create; admin can delete. */
+    match /activityFeed/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['text', 'authorName', 'createdAt'])
+        && request.resource.data.keys().size() == 3
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000
+        && request.resource.data.authorName is string
+        && request.resource.data.authorName.size() > 0
+        && request.resource.data.authorName.size() <= 80
+        && request.resource.data.createdAt == request.time;
+      allow delete: if isCardifyAdmin();
+    }
+
+    match /activityFeed/{postId} {
+      allow read: if true;
+      allow create: if isCardifyAdmin()
+        && request.resource.data.keys().hasAll(['title', 'description', 'imageUrl', 'imageStoragePath', 'clickCount', 'createdAt'])
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 200
+        && request.resource.data.description is string
+        && request.resource.data.description.size() <= 20000
+        && request.resource.data.imageUrl is string
+        && request.resource.data.imageUrl.size() > 0
+        && request.resource.data.imageUrl.size() <= 1000000
+        && request.resource.data.imageStoragePath is string
+        && request.resource.data.imageStoragePath.size() < 2000
+        && request.resource.data.imageStoragePath.matches('^activityFeed/[^/]+/main/[^/]+$')
+        && request.resource.data.clickCount == 0
+        && (!request.resource.data.keys().hasAny(['mainMime']) || (request.resource.data.mainMime is string && request.resource.data.mainMime.size() < 200))
+        && (!request.resource.data.keys().hasAny(['mainFileName']) || (request.resource.data.mainFileName is string && request.resource.data.mainFileName.size() < 500))
+        && (!request.resource.data.keys().hasAny(['descriptionAttachments'])
+          || (request.resource.data.descriptionAttachments is list
+            && request.resource.data.descriptionAttachments.size() <= 20))
+        && request.resource.data.keys().size() <= 12;
+      allow update: if activityClickCountBump() || activityLikeCountChange();
+      allow delete: if isCardifyAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

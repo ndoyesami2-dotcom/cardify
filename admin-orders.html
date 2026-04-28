@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Cardify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div class="bg-motifs" aria-hidden="true">
+      <span class="motif motif-1">ADMIN</span>
+    </div>
+
+    <header class="account-topbar">
+      <a href="./home.html" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo brand-logo--header" src="./CARDIFY__1_-removebg-preview.png" alt="" decoding="async" />
+      </a>
+      <div class="account-topbar-body" style="width: 100%; max-width: 100%; align-items: stretch">
+        <div class="admin-header-actions">
+          <a class="link-back" href="./home.html" id="adminBack">← Back to shop</a>
+        </div>
+        <h1 class="account-page-heading" id="adminTitle" style="margin-top: 4px">Admin</h1>
+      </div>
+    </header>
+
+    <main class="account-main admin-main admin-dashboard" id="adminRoot">
+      <p class="admin-orders-hint" id="adminPleaseWait" aria-live="polite">Checking sign-in…</p>
+
+      <div id="adminDenied" class="account-card hidden">
+        <p class="admin-orders-hint" id="adminDeniedText"></p>
+        <button type="button" class="primary-btn account-save-btn" id="adminSignOutBtn1">Sign out</button>
+      </div>
+
+      <div id="adminListWrap" class="hidden">
+        <section class="account-card" id="adminUpdateModeCard" aria-labelledby="adminUpdateModeCardTitle">
+          <h2 class="account-card-title" id="adminUpdateModeCardTitle">Update mode</h2>
+          <p class="account-card-hint" id="adminUpdateModeCardHint"></p>
+          <div class="admin-update-mode-row" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px">
+            <input type="checkbox" id="adminUpdateModeToggle" role="switch" aria-label="Update mode" style="width: 20px; height: 20px" />
+            <label for="adminUpdateModeToggle" class="admin-update-mode__label" id="adminUpdateModeLabel" style="min-width: 0; cursor: pointer">Update mode is off</label>
+          </div>
+          <p class="form-message" id="adminUpdateModeMsg" style="min-height: 1.2em; margin-top: 8px" aria-live="polite"></p>
+        </section>
+        <p class="admin-orders-hint" id="adminListIntro"></p>
+
+        <section class="account-card admin-news-tab-card" id="adminActivityCard" aria-labelledby="adminActivityCardTitle">
+          <div class="admin-news-tabs" role="tablist" aria-label="Admin tabs">
+            <button type="button" class="admin-news-tab is-active" role="tab" aria-selected="true">Post news</button>
+          </div>
+          <h2 class="account-card-title" id="adminActivityCardTitle">Activity feed</h2>
+          <p class="account-card-hint" id="adminActivityCardHint"></p>
+          <form id="adminActivityForm" class="admin-activity-composer" novalidate>
+            <label class="account-label" for="adminActTitle" id="adminActTitleLabel">Title</label>
+            <input
+              type="text"
+              id="adminActTitle"
+              class="admin-user-search"
+              maxlength="200"
+              required
+              autocomplete="off"
+              style="max-width: 100%"
+            />
+            <label class="account-label" for="adminActBody" id="adminActBodyLabel">Description (shown in detail view)</label>
+            <textarea id="adminActBody" class="admin-textarea-admin" maxlength="20000" rows="5" required></textarea>
+            <label class="account-label" for="adminActMainFile" id="adminActMainLabel">Main image</label>
+            <input type="file" id="adminActMainFile" required class="visually-hidden" accept="image/*" />
+            <div class="admin-dropzone" id="adminActMainDrop" role="button" tabindex="0" aria-controls="adminActMainFile">
+              <div id="adminActMainEmpty">
+                <strong>Drop an image here</strong>
+                <span>or click to choose one from your computer</span>
+              </div>
+              <div class="admin-main-preview" id="adminActMainPreview" aria-live="polite"></div>
+            </div>
+            <label class="account-label" for="adminActExtra" id="adminActExtraLabel">Optional files (links in the detail view)</label>
+            <input type="file" id="adminActExtra" multiple class="admin-user-search" style="max-width: 100%; padding: 8px" accept="*/*" />
+            <p class="form-message" id="adminActivityFormMsg" style="min-height: 1.2em; margin-top: 8px" aria-live="polite"></p>
+            <div id="adminActProgressWrap" class="admin-act-upload-progress" hidden>
+              <div
+                class="admin-act-upload-progress__track"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                id="adminActProgressBar"
+                aria-label="Upload progress"
+              >
+                <div class="admin-act-upload-progress__fill" id="adminActProgressFill"></div>
+              </div>
+              <p class="admin-act-upload-progress__text" id="adminActProgressText" aria-live="polite">0%</p>
+            </div>
+            <button type="submit" class="primary-btn" id="adminActPublish" style="margin-top: 6px">Publish to activity feed</button>
+          </form>
+          <h3 class="account-card-title" id="adminActListTitle" style="margin-top: 1.25rem; font-size: 1.05rem">Current posts</h3>
+          <p class="admin-orders-hint" id="adminActListEmpty" style="margin: 0 0 8px"></p>
+          <ul id="adminActivityList" class="admin-activity-list-block" style="list-style: none; padding: 0; margin: 0" aria-live="polite"></ul>
+        </section>
+
+        <section class="account-card" id="adminBroadcastCard" aria-labelledby="adminBroadcastTitle">
+          <h2 class="account-card-title" id="adminBroadcastTitle">Send notification message</h2>
+          <p class="account-card-hint" id="adminBroadcastHint">Send a message to every shop user. It appears on their notifications page.</p>
+          <div class="admin-broadcast-recipient-head">
+            <label class="account-label" id="adminBroadcastRecipientsLabel">Choose recipients</label>
+            <label class="admin-broadcast-select-all">
+              <input type="checkbox" id="adminBroadcastSelectAll" />
+              <span id="adminBroadcastSelectAllText">Select all</span>
+            </label>
+          </div>
+          <div id="adminBroadcastRecipients" class="admin-broadcast-recipient-list" aria-live="polite">
+            <p class="admin-orders-hint">Users will appear here.</p>
+          </div>
+          <label class="account-label" for="adminBroadcastText" id="adminBroadcastLabel">Message</label>
+          <textarea id="adminBroadcastText" class="admin-textarea-admin" maxlength="5000" rows="4"></textarea>
+          <p class="form-message" id="adminBroadcastMsg" style="min-height:1.2em;margin-top:8px" aria-live="polite"></p>
+          <button type="button" class="primary-btn" id="adminBroadcastSend">Send message</button>
+        </section>
+
+        <section class="account-card admin-center-panel" aria-labelledby="adminPendingTitle">
+          <h2 class="account-card-title" id="adminPendingTitle">Orders to confirm</h2>
+          <p class="account-card-hint" id="adminPendingSub"></p>
+          <div id="adminPendingMount"></div>
+        </section>
+
+        <section class="account-card" aria-labelledby="adminUsersTitle">
+          <div class="admin-users-section-head">
+            <div>
+              <h2 class="account-card-title" id="adminUsersTitle">Shop accounts</h2>
+              <p class="account-card-hint" id="adminUsersSub"></p>
+            </div>
+            <div class="admin-support-btn-wrap">
+              <span id="adminSupportBadge" class="admin-support-badge hidden" aria-label="New support" title="New support"></span>
+              <button type="button" class="primary-btn admin-support-top-btn" id="adminSupportBtn" style="position: relative; z-index: 1">Support</button>
+            </div>
+          </div>
+          <div class="admin-users-toolbar">
+            <label for="adminUserSearch" class="visually-hidden" id="adminUserSearchLabel">Search</label>
+            <input
+              type="search"
+              id="adminUserSearch"
+              class="admin-user-search"
+              placeholder="Search by name, email, or id…"
+              autocomplete="off"
+            />
+          </div>
+          <div id="adminUsersMount"></div>
+        </section>
+
+        <button type="button" class="primary-btn account-logout-btn" id="adminSignOutBtn2" style="margin-top: 16px">Sign out</button>
+      </div>
+    </main>
+
+    <div id="adminModalRoot" class="hidden" aria-hidden="true"></div>
+
+    <script src="./firebase-config-public.js"></script>
+    <script type="module" src="./admin-orders.js"></script>
+  </body>
+</html>

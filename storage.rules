@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// Deploy: firebase deploy --only storage
+// Must match isCardifyAdmin: ndoyesami2@gmail.com
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /activityFeed/{path=**} {
+      allow read: if true;
+      allow write, delete: if request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email is string
+        && request.auth.token.email.lower() == "ndoyesami2@gmail.com"
+        && request.auth.token.email.size() < 500;
+    }
+  }
+}

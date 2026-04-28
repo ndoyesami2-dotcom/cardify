@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cardify — Terms</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./update-mode.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="terms-body">
+    <header class="terms-toolbar">
+      <a href="./home.html" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo brand-logo--header" src="./CARDIFY__1_-removebg-preview.png" alt="" decoding="async" />
+      </a>
+      <a class="link-back terms-toolbar-back" href="./home.html" id="termsBack">← Back to shop</a>
+    </header>
+    <div class="terms-pdf-wrap">
+      <p class="terms-pdf-fallback" id="termsOpenPdfLine">
+        <a class="link-back" id="termsOpenPdfLink" href="#" target="_blank" rel="noopener noreferrer" style="font-size: 0.95rem; text-decoration: underline">Open the PDF in a new tab</a>
+      </p>
+      <iframe
+        class="terms-frame terms-frame--embed"
+        id="termsPdfFrame"
+        title="Terms and conditions (PDF)"
+      ></iframe>
+    </div>
+    <script src="./firebase-config-public.js"></script>
+    <script type="module" src="./update-mode.js"></script>
+    <script>
+      (function () {
+        function detectLang() {
+          var p = new URLSearchParams(location.search);
+          var raw = p.get("lang");
+          if (raw) {
+            raw = String(raw).toLowerCase().split(/[-_]/)[0];
+            if (raw === "fr" || raw === "fra" || raw === "french") return "fr";
+            return "en";
+          }
+          try {
+            raw = (localStorage.getItem("cardifyLanguage") || "en")
+              .toString()
+              .toLowerCase()
+              .split(/[-_]/)[0];
+            if (raw === "fr" || raw === "fra" || raw === "french") return "fr";
+          } catch (e) {}
+          return "en";
+        }
+        var lang = detectLang();
+        document.documentElement.lang = lang === "fr" ? "fr" : "en";
+        var EN = "By using Cardify, you agree to the following terms.pdf";
+        var FR =
+          "La commande est traitée uniquement après confirmation du paiement..pdf";
+        var fileName = lang === "fr" ? FR : EN;
+        var base = new URL(".", document.baseURI);
+        var path = fileName
+          .split("/")
+          .map(function (seg) {
+            return encodeURIComponent(seg);
+          })
+          .join("/");
+        var absolute = new URL(path, base).href;
+        var u = absolute + "#toolbar=0&navpanes=0&view=FitH";
+        var frame = document.getElementById("termsPdfFrame");
+        var a = document.getElementById("termsOpenPdfLink");
+        if (frame) {
+          frame.setAttribute("src", u);
+          frame.setAttribute("title", lang === "fr" ? "Document PDF — conditions" : "Terms and conditions (PDF)");
+        }
+        if (a) a.setAttribute("href", absolute);
+        var back = document.getElementById("termsBack");
+        var line = document.getElementById("termsOpenPdfLine");
+        if (lang === "fr") {
+          if (back) back.textContent = "← Retour à la boutique";
+          if (a) a.textContent = "Ouvrir le PDF dans un nouvel onglet";
+        } else {
+          if (back) back.textContent = "← Back to shop";
+          if (a) a.textContent = "Open the PDF in a new tab";
+        }
+        if (line) {
+          line.style.display = "block";
+        }
+        document.title = lang === "fr" ? "Cardify — Conditions" : "Cardify — Terms";
+      })();
+    </script>
+  </body>
+</html>

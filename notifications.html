@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications — Cardify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script>
+      try {
+        if (localStorage.getItem("cardifyTheme") !== "light") {
+          document.documentElement.classList.add("cardify-dark");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="account-page notifications-page">
+    <header class="account-topbar">
+      <a href="./home.html" class="header-brand-link" aria-label="Cardify home">
+        <img class="brand-logo brand-logo--header" src="./CARDIFY__1_-removebg-preview.png" alt="" decoding="async" />
+      </a>
+      <div class="account-topbar-body">
+        <a class="link-back" href="./home.html" id="notificationsBack">← Back to shop</a>
+        <h1 class="account-page-heading" id="notificationsTitle">Notifications</h1>
+      </div>
+    </header>
+    <main class="account-main notifications-main">
+      <section class="notifications-section" aria-labelledby="notificationsTitle">
+        <p class="account-card-hint" id="notificationsHint">Messages from Cardify appear here.</p>
+        <div class="account-list" id="notificationsMount">
+          <p class="account-empty">Loading…</p>
+        </div>
+      </section>
+    </main>
+    <script src="./firebase-config-public.js"></script>
+    <script type="module" src="./notifications.js"></script>
+  </body>
+</html>

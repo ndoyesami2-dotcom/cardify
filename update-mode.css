@@ -1,0 +1,262 @@
+/* Full-screen maintenance overlay (see update-mode.js). Loaded on public pages only. */
+.cardify-update-mode {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px 32px;
+  box-sizing: border-box;
+  overflow: auto;
+  --cardify-um-fg: #e8ffef;
+  color: var(--cardify-um-fg);
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.cardify-update-mode::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    125deg,
+    #000000 0%,
+    #0a1f0a 20%,
+    #00a651 45%,
+    #000000 70%,
+    #0d3d0d 100%
+  );
+  background-size: 400% 400%;
+  animation: cardify-um-grad 18s ease-in-out infinite;
+}
+
+@keyframes cardify-um-grad {
+  0% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+  100% {
+    background-position: 0% 40%;
+  }
+}
+
+.cardify-update-mode__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.cardify-update-mode__lang {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.cardify-update-mode__lang-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-right: 0.15rem;
+}
+
+.cardify-update-mode__lang-btns {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.cardify-update-mode__lang-btn {
+  min-width: 2.5rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--cardify-um-fg);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.cardify-update-mode__lang-btn:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.cardify-update-mode__lang-btn.is-active {
+  border-color: rgba(0, 200, 83, 0.6);
+  background: rgba(0, 200, 83, 0.2);
+  color: #b8ffc9;
+}
+
+.cardify-update-mode__sub {
+  margin: 0.5rem 0 0;
+  font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0.9;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cardify-update-mode__unlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-sizing: border-box;
+}
+
+.cardify-update-mode__admin-hint {
+  margin: 0 0 2px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  opacity: 0.8;
+  font-style: italic;
+  color: rgba(232, 255, 239, 0.9);
+}
+
+.cardify-update-mode__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.cardify-update-mode__input {
+  flex: 1 1 200px;
+  min-width: 0;
+  max-width: 280px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font: inherit;
+}
+
+.cardify-update-mode__input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.cardify-update-mode__btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background: #00c853;
+  color: #000;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cardify-update-mode__btn:hover {
+  filter: brightness(1.08);
+}
+
+.cardify-update-mode__header {
+  margin: 0;
+}
+
+.cardify-update-mode__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 4vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.cardify-update-mode__bar-wrap {
+  text-align: left;
+}
+
+.cardify-update-mode__bar-label {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.cardify-update-mode__bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 255, 100, 0.25);
+  overflow: hidden;
+}
+
+.cardify-update-mode__bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #00a651, #5efc82);
+  transition: width 0.6s ease;
+}
+
+.cardify-update-mode__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.cardify-update-mode__social-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--cardify-um-fg);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.95;
+  transition: opacity 0.2s;
+}
+
+.cardify-update-mode__social-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.cardify-update-mode__ico {
+  display: block;
+  line-height: 0;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+.cardify-update-mode__visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+body.cardify--update-locked {
+  overflow: hidden;
+}
